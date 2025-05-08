@@ -4,6 +4,7 @@
   "description": "Templade node with express",
   "main": "index.js",
   "scripts": {
+    "migrate:dev": "knex migrate:rollback --env development && knex migrate:latest --env development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx src/index.ts",
     "start:dev": "tsx --watch src/index.ts",
@@ -46,7 +47,9 @@
   },
   "dependencies": {
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7"
   },
   "config": {
     "commitizen": {
