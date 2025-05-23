@@ -1,18 +1,25 @@
+import { Either, Left, Right } from '../../utils/either'
+
+type Error = string
 export class Email {
-    public readonly value: string
+    private constructor(readonly prop: string) {}
 
-    constructor(value: string) {
-        if (!this.isValidEmail(value)) {
-            throw new Error('Email inválid')
-        }
-
-        this.value = value
-    }
-
-    private isValidEmail(value: string) {
+    private static isValidEmail(prop: string) {
         const strictEmailRegex =
             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-        return strictEmailRegex.test(value)
+        return strictEmailRegex.test(prop)
+    }
+
+    static create(prop: string): Either<Error, Email> {
+        if (!prop) {
+            return Left.create(`Email empty is not valid.`)
+        }
+
+        if (!this.isValidEmail(prop)) {
+            return Left.create(`${prop} is not valid Email.`)
+        }
+
+        return Right.create(new Email(prop))
     }
 }
