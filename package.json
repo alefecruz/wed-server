@@ -13,8 +13,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix",
-      "jest --findRelatedTests"
+      "eslint --fix"
     ]
   },
   "repository": {
