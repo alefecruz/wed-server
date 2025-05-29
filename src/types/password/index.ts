@@ -3,23 +3,24 @@ import { Either, Left, Right } from '../../utils/either'
 type Error = string
 
 export class Password {
-    private constructor(readonly value: string) {}
+    private constructor(readonly password: string) {}
 
-    private static isValidPassword(value: string): boolean {
+    private static isValidPassword(password: string): boolean {
         const strongPasswordRegex =
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/
-        return strongPasswordRegex.test(value)
+
+        return strongPasswordRegex.test(password)
     }
 
-    static create(value: string): Either<Error, Password> {
-        if (!value) {
+    static create(password: string): Either<Error, Password> {
+        if (!password) {
             return Left.create('Password empty is not valid.')
         }
 
-        if (!this.isValidPassword(value)) {
-            return Left.create(`${value} is not valid Password.`)
+        if (!this.isValidPassword(password)) {
+            return Left.create(`${password} is not valid Password.`)
         }
 
-        return Right.create(new Password(value))
+        return Right.create(new Password(password))
     }
 }

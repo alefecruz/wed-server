@@ -3,32 +3,24 @@ import { Either, Left, Right } from '../../utils/either'
 type Error = string
 
 export class Name {
-    private constructor(private readonly _value: string) {}
+    private constructor(readonly name: string) {}
 
-    get value(): string {
-        return this._value
-    }
-
-    private static isValidName(prop: string): boolean {
+    private static isValidName(name: string): boolean {
         const validNameRegex = /^[A-Za-zÀ-ÿ\s]{2,}$/
-        return validNameRegex.test(prop.trim())
+        return validNameRegex.test(name)
     }
 
-    static create(prop: string): Either<Error, Name> {
-        const trimmed = prop.trim()
+    static create(name: string): Either<Error, Name> {
+        const nameTrimmed = name.trim()
 
-        if (!trimmed) {
+        if (!nameTrimmed) {
             return Left.create('Name cannot be empty.')
         }
 
-        if (trimmed.length < 2) {
-            return Left.create('Name must have at least 2 characters.')
-        }
-
-        if (!this.isValidName(trimmed)) {
+        if (!this.isValidName(nameTrimmed)) {
             return Left.create('Name must contain only letters and spaces.')
         }
 
-        return Right.create(new Name(trimmed))
+        return Right.create(new Name(nameTrimmed))
     }
 }
