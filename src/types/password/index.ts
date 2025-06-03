@@ -1,9 +1,9 @@
-import { Either, Left, Right } from '../../utils/either'
+import { Either, Left, Right, IError } from '../../utils'
 
-type Error = string
+type IPassworError = IError<'Type Password', 'createError'>
 
 export class Password {
-    private constructor(readonly password: string) {}
+    private constructor(private readonly password: string) {}
 
     private static isValidPassword(password: string): boolean {
         const strongPasswordRegex =
@@ -12,15 +12,27 @@ export class Password {
         return strongPasswordRegex.test(password)
     }
 
-    static create(password: string): Either<Error, Password> {
+    static create(password: string): Either<IPassworError, Password> {
         if (!password) {
-            return Left.create('Password empty is not valid.')
+            return Left.create({
+                domain: 'Type Password',
+                type: 'createError',
+                message: 'Password empty is not valid.',
+            })
         }
 
         if (!this.isValidPassword(password)) {
-            return Left.create(`${password} is not valid Password.`)
+            return Left.create({
+                domain: 'Type Password',
+                type: 'createError',
+                message: `${password} is not valid Password.`,
+            })
         }
 
         return Right.create(new Password(password))
+    }
+
+    get() {
+        return this.password
     }
 }

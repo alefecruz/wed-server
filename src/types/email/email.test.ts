@@ -12,7 +12,7 @@ describe('it should verify email type', () => {
         emailEither = Email.create('Raissa@gmail.com')
 
         if (emailEither.isRight()) {
-            expect(emailEither.value.email).toBe('Raissa@gmail.com')
+            expect(emailEither.value.get()).toBe('Raissa@gmail.com')
         }
     })
 

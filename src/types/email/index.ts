@@ -1,8 +1,9 @@
-import { Either, Left, Right } from '../../utils/either'
+import { Either, Left, Right, IError } from '../../utils'
 
-type Error = string
+type IEmailError = IError<'Type Email', 'createError'>
+
 export class Email {
-    private constructor(readonly email: string) {}
+    private constructor(private readonly email: string) {}
 
     private static isValidEmail(email: string) {
         const strictEmailRegex =
@@ -11,15 +12,27 @@ export class Email {
         return strictEmailRegex.test(email)
     }
 
-    static create(email: string): Either<Error, Email> {
+    static create(email: string): Either<IEmailError, Email> {
         if (!email) {
-            return Left.create(`Email empty is not valid.`)
+            return Left.create({
+                domain: 'Type Email',
+                type: 'createError',
+                message: `Email empty is not valid.`,
+            })
         }
 
         if (!this.isValidEmail(email)) {
-            return Left.create(`${email} is not valid Email.`)
+            return Left.create({
+                domain: 'Type Email',
+                type: 'createError',
+                message: `${email} is not valid Email.`,
+            })
         }
 
         return Right.create(new Email(email))
+    }
+
+    get() {
+        return this.email
     }
 }
