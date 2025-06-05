@@ -11,7 +11,7 @@ describe('it should verify name type', () => {
         nameTest = Name.create('Alefe Cruz')
 
         if (nameTest.isRight()) {
-            expect(nameTest.value.get()).toBe('Alefe Cruz')
+            expect(nameTest.value.serialize()).toBe('Alefe Cruz')
         }
     })
 

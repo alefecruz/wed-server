@@ -32,7 +32,7 @@ export class Name {
         return Right.create(new Name(nameTrimmed))
     }
 
-    get() {
+    serialize() {
         return this.name
     }
 }

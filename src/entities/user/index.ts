@@ -5,16 +5,31 @@ type IUserCreate = {
     email: string
     name: string
     password: string
-    createAt?: Date
-    updateAt?: Date
 }
 
-type IUser = IUserCreate
+type IUserLoad = {
+    id: number
+    email: string
+    name: string
+    password: string
+    createAt: Date
+    updateAt: Date
+}
+
+type IUserOutput = {
+    id: number | null
+    email: string
+    name: string
+    password: string
+    createAt: Date
+    updateAt: Date
+}
 
 type IUserError = IError<'User', 'createError' | 'updateError'>
 
 export class User {
     private constructor(
+        private readonly id: number | null,
         private email: Email,
         private name: Name,
         private password: Password,
@@ -22,16 +37,21 @@ export class User {
         private updateAt: Date,
     ) {}
 
-    static create({
-        email,
-        name,
-        password,
-        createAt,
-        updateAt,
-    }: IUserCreate): Either<IUserError, User> {
+    static create(props: IUserCreate): Either<IUserError, User> {
+        const { email, name, password } = props
         const eitherEmail = Email.create(email)
         const eitherName = Name.create(name)
         const eitherPassword = Password.create(password)
+
+        const mandatoryFields = ['email', 'name', 'password']
+
+        for (const field of mandatoryFields)
+            if (!props[field as keyof IUserCreate])
+                return Left.create({
+                    domain: 'User',
+                    type: 'createError',
+                    message: `User field ${field} is required.`,
+                })
 
         if (eitherEmail.isLeft()) {
             return Left.create({
@@ -61,11 +81,73 @@ export class User {
 
         return Right.create(
             new User(
+                null,
                 eitherEmail.value,
                 eitherName.value,
                 eitherPassword.value,
-                createAt ?? now,
-                updateAt ?? now,
+                now,
+                now,
+            ),
+        )
+    }
+
+    static load(props: IUserLoad) {
+        const { email, name, password } = props
+        const eitherEmail = Email.create(email)
+        const eitherName = Name.create(name)
+        const eitherPassword = Password.create(password)
+
+        const mandatoryFields = [
+            'id',
+            'email',
+            'name',
+            'password',
+            'createAt',
+            'updateAt',
+        ]
+
+        for (const field of mandatoryFields)
+            if (!props[field as keyof IUserLoad])
+                return Left.create({
+                    domain: 'User',
+                    type: 'createError',
+                    message: `User field ${field} is required.`,
+                })
+
+        if (eitherEmail.isLeft()) {
+            return Left.create({
+                domain: 'User',
+                type: 'createError',
+                message: eitherEmail.error.message,
+            })
+        }
+
+        if (eitherName.isLeft()) {
+            return Left.create({
+                domain: 'User',
+                type: 'createError',
+                message: eitherName.error.message,
+            })
+        }
+
+        if (eitherPassword.isLeft()) {
+            return Left.create({
+                domain: 'User',
+                type: 'createError',
+                message: eitherPassword.error.message,
+            })
+        }
+
+        const now = new Date()
+
+        return Right.create(
+            new User(
+                null,
+                eitherEmail.value,
+                eitherName.value,
+                eitherPassword.value,
+                now,
+                now,
             ),
         )
     }
@@ -77,7 +159,7 @@ export class User {
             return Left.create({
                 domain: 'User',
                 type: 'updateError',
-                message: eitherEmail.error,
+                message: eitherEmail.error.message,
             })
 
         const now = new Date()
@@ -95,7 +177,7 @@ export class User {
             return Left.create({
                 domain: 'User',
                 type: 'updateError',
-                message: eitherName.error,
+                message: eitherName.error.message,
             })
 
         const now = new Date()
@@ -113,7 +195,7 @@ export class User {
             return Left.create({
                 domain: 'User',
                 type: 'updateError',
-                message: eitherPassword.error,
+                message: eitherPassword.error.message,
             })
 
         const now = new Date()
@@ -124,11 +206,12 @@ export class User {
         return Right.create(undefined)
     }
 
-    get(): IUser {
+    serialize(): IUserOutput {
         return {
-            name: this.name.get(),
-            email: this.email.get(),
-            password: this.password.get(),
+            id: this.id,
+            name: this.name.serialize(),
+            email: this.email.serialize(),
+            password: this.password.serialize(),
             createAt: this.createAt,
             updateAt: this.updateAt,
         }

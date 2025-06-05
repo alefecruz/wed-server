@@ -32,7 +32,7 @@ export class Email {
         return Right.create(new Email(email))
     }
 
-    get() {
+    serialize() {
         return this.email
     }
 }

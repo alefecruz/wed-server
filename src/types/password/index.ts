@@ -32,7 +32,7 @@ export class Password {
         return Right.create(new Password(password))
     }
 
-    get() {
+    serialize() {
         return this.password
     }
 }
