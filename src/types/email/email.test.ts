@@ -21,4 +21,18 @@ describe('it should verify email type', () => {
         const emailEither = Email.create('dev@@test.a')
         expect(emailEither.isLeft()).toBe(true)
     })
+
+    test('if create new email without email', () => {
+        // @ts-expect-error test
+        const emailEither = Email.create()
+        expect(emailEither.isLeft()).toBe(true)
+    })
+
+    test('if email serialize is correct', () => {
+        const emailEither = Email.create('user@dev.com')
+
+        const email = emailEither.isRight() ? emailEither.value : null
+
+        expect(email?.serialize()).toBe('user@dev.com')
+    })
 })
