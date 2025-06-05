@@ -20,4 +20,8 @@ describe('it should verify name type', () => {
         const nameTest = Name.create('Ra!ssa')
         expect(nameTest.isLeft()).toBe(true)
     })
+    test('if empty name is not valid', () => {
+        const nameTest = Name.create('   ')
+        expect(nameTest.isLeft()).toBe(true)
+    })
 })
