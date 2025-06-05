@@ -24,4 +24,9 @@ describe('it should verify name type', () => {
         const nameTest = Name.create('   ')
         expect(nameTest.isLeft()).toBe(true)
     })
+    test('if name serialize is correct', () => {
+        const nameEither = Name.create('  Raissa Marques  ')
+        const name = nameEither.isRight() ? nameEither.value : null
+        expect(name?.serialize()).toBe('Raissa Marques')
+    })
 })
