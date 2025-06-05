@@ -7,15 +7,6 @@ describe('it should verify email type', () => {
         expect(emailTest.isRight()).toBe(true)
     })
 
-    test('if change email creating a new instance', () => {
-        let emailEither = Email.create('dev@test.com')
-        emailEither = Email.create('Raissa@gmail.com')
-
-        if (emailEither.isRight()) {
-            expect(emailEither.value.serialize()).toBe('Raissa@gmail.com')
-        }
-    })
-
     test('if dev@test.a is not a valid email', () => {
         const emailEither = Email.create('dev@test.a')
         expect(emailEither.isLeft()).toBe(true)

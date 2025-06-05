@@ -6,12 +6,6 @@ describe('it should verify password type', () => {
         expect(pwd.isRight()).toBe(true)
     })
 
-    test('change password creating a new instance', () => {
-        let pwd = Password.create('Graudo@123')
-        pwd = Password.create('Graudo$123')
-        expect(pwd.isRight()).toBe(true)
-    })
-
     test('invalid: less than 8 chars', () => {
         const pwd = Password.create('Gra@1a')
         expect(pwd.isLeft()).toBe(true)

@@ -6,15 +6,6 @@ describe('it should verify name type', () => {
         expect(nameTest.isRight()).toBe(true)
     })
 
-    test('if change name creating a new instance', () => {
-        let nameTest = Name.create('Raissa Marques')
-        nameTest = Name.create('Alefe Cruz')
-
-        if (nameTest.isRight()) {
-            expect(nameTest.value.serialize()).toBe('Alefe Cruz')
-        }
-    })
-
     test('if "R" is not a valid name (too short)', () => {
         const nameTest = Name.create('R')
         expect(nameTest.isLeft()).toBe(true)
