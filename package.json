@@ -6,6 +6,7 @@
   "scripts": {
     "migrate:dev": "knex migrate:rollback --env development && knex migrate:latest --env development",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "start": "tsx src/index.ts",
     "start:dev": "tsx --watch src/index.ts",
     "build": "tsup src",
