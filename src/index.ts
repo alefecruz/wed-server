@@ -1,16 +1,13 @@
-// import dbConfig from './config/db-config'
 import { User } from './entities/user'
 
-const alefeUserEither = User.create({
-    email: 'alefe@dev.com',
+const userAlefeEither = User.create({
     name: 'Álefe Cruz',
-    password: '12912923Saa#22',
+    password: 'S3nh@F0rt3',
+    email: '%@devot.com.br',
 })
 
-// if (alefeUserEither.isLeft()) console.log(alefeUserEither.error)
+const result = userAlefeEither.isRight()
+    ? userAlefeEither.value.serialize()
+    : userAlefeEither.error
 
-if (alefeUserEither.isRight()) {
-    const alefeUser = alefeUserEither.value
-
-    console.log(alefeUser.get())
-}
+console.log(result)
