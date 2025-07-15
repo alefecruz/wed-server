@@ -1,13 +1,22 @@
-import { User } from './entities/user'
+import { Guest } from './entities/guest'
 
-const userAlefeEither = User.create({
-    name: 'Álefe Cruz',
-    password: 'S3nh@F0rt3',
-    email: '%@devot.com.br',
-})
+function test() {
+    const newGuestEither = Guest.create({
+        name: 'Álefe Cruz',
+        userId: 2,
+    })
 
-const result = userAlefeEither.isRight()
-    ? userAlefeEither.value.serialize()
-    : userAlefeEither.error
+    if (newGuestEither.isLeft()) return
 
-console.log(result)
+    const newGuest = newGuestEither.value
+
+    console.log('ORIGINAL CRIADO', newGuest)
+
+    newGuest.changeAttendenceConfimation(true)
+    newGuest.changeSendInvite(true)
+    newGuest.changeName('Allan Paulo')
+
+    console.log('ALTERADO', newGuest.serialize())
+}
+
+test()
