@@ -1,7 +1,7 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
     bail: 1,
-    verbose: false,
+    verbose: true,
     testEnvironment: 'node',
     transform: {
         '^.+\.ts$': ['ts-jest', {}],
