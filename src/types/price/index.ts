@@ -4,7 +4,7 @@ import { Left, IError, Either, Right } from '../../utils'
 type IPriceError = IError<'Type Price', 'createType'>
 
 export class Price {
-    constructor(private readonly price: string) {}
+    private constructor(private readonly price: string) {}
 
     private static applyCurrency(
         value: number,

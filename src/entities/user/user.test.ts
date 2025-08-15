@@ -1,15 +1,45 @@
 import { User } from './index'
 
+const now = new Date()
 describe('it should verify user entity when created', () => {
     test('if user is valid', () => {
-        const userDev = User.create({
+        const userDevEither = User.create({
             email: 'user@dev.com',
             husbandName: 'Marido Dev',
             wifeName: 'Mulher Dev',
             password: 'Us3r_D3v',
         })
 
-        expect(userDev.isRight()).toBe(true)
+        if (userDevEither.isLeft()) {
+            throw new Error(
+                `Error loading user: ${userDevEither.error.message}`,
+            )
+        }
+
+        expect(userDevEither.isRight()).toBe(true)
+
+        const userDev = userDevEither.value
+
+        expect(userDev).toBeInstanceOf(User)
+
+        const {
+            id,
+            email,
+            husbandName,
+            wifeName,
+            // password,
+            createAt,
+            updateAt,
+        } = userDev.serialize()
+
+        expect(id).toBeNull()
+        expect(email).toBe('user@dev.com')
+        expect(husbandName).toBe('Marido Dev')
+        expect(wifeName).toBe('Mulher Dev')
+        // TODO - Quando aplicarmos criptografia
+        // expect(password).toBe('Marido123')
+        expect(createAt).toBeInstanceOf(Date)
+        expect(updateAt).toBeInstanceOf(Date)
     })
     test('if user with email: dev@test.a is not a valid user', () => {
         const userDev = User.create({
@@ -65,8 +95,7 @@ describe('it should verify user entity when created', () => {
 
 describe('it should verify user entity when loaded', () => {
     test('if user is valid when load', () => {
-        const now = new Date()
-        const userDev = User.load({
+        const userDevEither = User.load({
             id: 1,
             email: 'user@dev.com',
             husbandName: 'Marido Dev',
@@ -76,7 +105,35 @@ describe('it should verify user entity when loaded', () => {
             updateAt: now,
         })
 
-        expect(userDev.isRight()).toBe(true)
+        if (userDevEither.isLeft()) {
+            throw new Error(
+                `Error loading user: ${userDevEither.error.message}`,
+            )
+        }
+
+        expect(userDevEither.isRight()).toBe(true)
+
+        const userDev = userDevEither.value
+
+        expect(userDev).toBeInstanceOf(User)
+
+        const {
+            id,
+            email,
+            husbandName,
+            wifeName,
+            password,
+            createAt,
+            updateAt,
+        } = userDev.serialize()
+
+        expect(id).toBe(1)
+        expect(email).toBe('user@dev.com')
+        expect(husbandName).toBe('Marido Dev')
+        expect(wifeName).toBe('Mulher Dev')
+        expect(password).toBe('Us3r_D3v')
+        expect(createAt).toBeInstanceOf(Date)
+        expect(updateAt).toBeInstanceOf(Date)
     })
 
     test('if load user without id is not a valid', () => {
@@ -126,10 +183,11 @@ describe('it should verify user entity when changed', () => {
 
         const eitherChanged = userDev.changeEmail(newEmail)
 
+        expect(eitherChanged.isRight()).toBe(true)
+
         const { email } = userDev.serialize()
 
         expect(email).toBe(newEmail)
-        expect(eitherChanged.isRight()).toBe(true)
     })
 
     test('if the email exchange is invalid if the new email is invalid', () => {

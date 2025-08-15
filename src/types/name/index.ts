@@ -11,15 +11,15 @@ export class Name {
     }
 
     static create(name: string): Either<INameError, Name> {
-        const nameTrimmed = name.trim()
-
-        if (!nameTrimmed) {
+        if (!name) {
             return Left.create({
                 domain: 'Type Name',
                 type: 'createError',
                 message: 'Name cannot be empty.',
             })
         }
+
+        const nameTrimmed = name.trim()
 
         if (!this.isValidName(nameTrimmed)) {
             return Left.create({
