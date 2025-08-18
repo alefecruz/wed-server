@@ -1,16 +1,18 @@
 import { Email, Name, Password } from '../../types'
-import { Either, Left, Right, IError } from '../../utils'
+import { Either, Left, Right, IError, getFirstError } from '../../utils'
 
 type IUserCreate = {
     email: string
-    name: string
+    husbandName: string
+    wifeName: string
     password: string
 }
 
 type IUserLoad = {
     id: number
+    husbandName: string
+    wifeName: string
     email: string
-    name: string
     password: string
     createAt: Date
     updateAt: Date
@@ -18,62 +20,49 @@ type IUserLoad = {
 
 type IUserOutput = {
     id: number | null
+    husbandName: string
+    wifeName: string
     email: string
-    name: string
     password: string
     createAt: Date
     updateAt: Date
 }
 
-type IUserError = IError<'User', 'createError' | 'updateError'>
+type IUserError = IError<'User', 'createError' | 'updateError' | 'loadError'>
 
 export class User {
     private constructor(
         private readonly id: number | null,
         private email: Email,
-        private name: Name,
+        private husbandName: Name,
+        private wifeName: Name,
         private password: Password,
         private readonly createAt: Date,
         private updateAt: Date,
     ) {}
 
     static create(props: IUserCreate): Either<IUserError, User> {
-        const { email, name, password } = props
+        const { email, husbandName, wifeName, password } = props
         const eitherEmail = Email.create(email)
-        const eitherName = Name.create(name)
+        const eitherHusbandName = Name.create(husbandName)
+        const eitherWifeName = Name.create(wifeName)
         const eitherPassword = Password.create(password)
 
-        const mandatoryFields = ['email', 'name', 'password']
-
-        for (const field of mandatoryFields)
-            if (!props[field as keyof IUserCreate])
-                return Left.create({
-                    domain: 'User',
-                    type: 'createError',
-                    message: `User field ${field} is required.`,
-                })
-
-        if (eitherEmail.isLeft()) {
+        if (
+            eitherEmail.isLeft() ||
+            eitherHusbandName.isLeft() ||
+            eitherWifeName.isLeft() ||
+            eitherPassword.isLeft()
+        ) {
             return Left.create({
                 domain: 'User',
                 type: 'createError',
-                message: eitherEmail.error.message,
-            })
-        }
-
-        if (eitherName.isLeft()) {
-            return Left.create({
-                domain: 'User',
-                type: 'createError',
-                message: eitherName.error.message,
-            })
-        }
-
-        if (eitherPassword.isLeft()) {
-            return Left.create({
-                domain: 'User',
-                type: 'createError',
-                message: eitherPassword.error.message,
+                message: getFirstError(
+                    eitherEmail,
+                    eitherHusbandName,
+                    eitherWifeName,
+                    eitherPassword,
+                ),
             })
         }
 
@@ -83,7 +72,8 @@ export class User {
             new User(
                 null,
                 eitherEmail.value,
-                eitherName.value,
+                eitherHusbandName.value,
+                eitherWifeName.value,
                 eitherPassword.value,
                 now,
                 now,
@@ -92,19 +82,21 @@ export class User {
     }
 
     static load(props: IUserLoad) {
-        const { email, name, password } = props
+        const {
+            id,
+            email,
+            husbandName,
+            wifeName,
+            password,
+            createAt,
+            updateAt,
+        } = props
         const eitherEmail = Email.create(email)
-        const eitherName = Name.create(name)
+        const eitherHusbandName = Name.create(husbandName)
+        const eitherWifeName = Name.create(wifeName)
         const eitherPassword = Password.create(password)
 
-        const mandatoryFields = [
-            'id',
-            'email',
-            'name',
-            'password',
-            'createAt',
-            'updateAt',
-        ]
+        const mandatoryFields = ['id', 'createAt', 'updateAt']
 
         for (const field of mandatoryFields)
             if (!props[field as keyof IUserLoad])
@@ -114,40 +106,33 @@ export class User {
                     message: `User field ${field} is required.`,
                 })
 
-        if (eitherEmail.isLeft()) {
+        if (
+            eitherEmail.isLeft() ||
+            eitherHusbandName.isLeft() ||
+            eitherWifeName.isLeft() ||
+            eitherPassword.isLeft()
+        ) {
             return Left.create({
                 domain: 'User',
-                type: 'createError',
-                message: eitherEmail.error.message,
+                type: 'loadError',
+                message: getFirstError(
+                    eitherEmail,
+                    eitherHusbandName,
+                    eitherWifeName,
+                    eitherPassword,
+                ),
             })
         }
-
-        if (eitherName.isLeft()) {
-            return Left.create({
-                domain: 'User',
-                type: 'createError',
-                message: eitherName.error.message,
-            })
-        }
-
-        if (eitherPassword.isLeft()) {
-            return Left.create({
-                domain: 'User',
-                type: 'createError',
-                message: eitherPassword.error.message,
-            })
-        }
-
-        const now = new Date()
 
         return Right.create(
             new User(
-                null,
+                id,
                 eitherEmail.value,
-                eitherName.value,
+                eitherHusbandName.value,
+                eitherWifeName.value,
                 eitherPassword.value,
-                now,
-                now,
+                createAt,
+                updateAt,
             ),
         )
     }
@@ -170,8 +155,8 @@ export class User {
         return Right.create(undefined)
     }
 
-    changeName(newName: string): Either<IUserError, undefined> {
-        const eitherName = Name.create(newName)
+    changeHusbandName(newHusbandName: string): Either<IUserError, undefined> {
+        const eitherName = Name.create(newHusbandName)
 
         if (eitherName.isLeft())
             return Left.create({
@@ -182,7 +167,25 @@ export class User {
 
         const now = new Date()
 
-        this.name = eitherName.value
+        this.husbandName = eitherName.value
+        this.updateAt = now
+
+        return Right.create(undefined)
+    }
+
+    changeWifeName(newWifeName: string): Either<IUserError, undefined> {
+        const eitherName = Name.create(newWifeName)
+
+        if (eitherName.isLeft())
+            return Left.create({
+                domain: 'User',
+                type: 'updateError',
+                message: eitherName.error.message,
+            })
+
+        const now = new Date()
+
+        this.wifeName = eitherName.value
         this.updateAt = now
 
         return Right.create(undefined)
@@ -209,7 +212,8 @@ export class User {
     serialize(): IUserOutput {
         return {
             id: this.id,
-            name: this.name.serialize(),
+            husbandName: this.husbandName.serialize(),
+            wifeName: this.wifeName.serialize(),
             email: this.email.serialize(),
             password: this.password.serialize(),
             createAt: this.createAt,

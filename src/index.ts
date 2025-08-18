@@ -1,16 +1,22 @@
-// import dbConfig from './config/db-config'
-import { User } from './entities/user'
+import { Guest } from './entities/guest'
 
-const alefeUserEither = User.create({
-    email: 'alefe@dev.com',
-    name: 'Álefe Cruz',
-    password: '12912923Saa#22',
-})
+function test() {
+    const newGuestEither = Guest.create({
+        name: 'Álefe Cruz',
+        userId: 2,
+    })
 
-// if (alefeUserEither.isLeft()) console.log(alefeUserEither.error)
+    if (newGuestEither.isLeft()) return
 
-if (alefeUserEither.isRight()) {
-    const alefeUser = alefeUserEither.value
+    const newGuest = newGuestEither.value
 
-    console.log(alefeUser.get())
+    console.log('ORIGINAL CRIADO', newGuest)
+
+    newGuest.changeAttendenceConfimation(true)
+    newGuest.changeSendInvite(true)
+    newGuest.changeName('Allan Paulo')
+
+    console.log('ALTERADO', newGuest.serialize())
 }
+
+test()
