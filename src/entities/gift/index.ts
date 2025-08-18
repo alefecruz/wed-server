@@ -12,6 +12,20 @@ type IGiftCreate = {
     urlImage: string
 }
 
+type IGiftLoad = {
+    id: number
+    name: string
+    description: string | null
+    price: number
+    userId: number
+    guestId: number
+    urlPixCopyPaste: string
+    urlPixQRCode: string
+    urlImage: string
+    createAt: Date
+    updateAt: Date
+}
+
 type IGiftError = IError<'Gift', 'createError' | 'loadError' | 'updateError'>
 
 export class Gift {
@@ -89,6 +103,61 @@ export class Gift {
                 urlImageEither.value,
                 new Date(),
                 new Date(),
+            ),
+        )
+    }
+
+    static load(props: IGiftLoad): Either<IGiftError, Gift> {
+        const {
+            id,
+            name,
+            description,
+            userId,
+            guestId,
+            price,
+            urlImage,
+            urlPixCopyPaste,
+            urlPixQRCode,
+            createAt,
+            updateAt,
+        } = props
+
+        const eitherPrice = Price.create(price)
+        const eitherUrlImage = URL.create(urlImage)
+        const eitherUrlPixCopyPaste = URL.create(urlPixCopyPaste)
+        const eitherUrlPixQRCode = URL.create(urlPixQRCode)
+
+        if (
+            eitherPrice.isLeft() ||
+            eitherUrlImage.isLeft() ||
+            eitherUrlPixCopyPaste.isLeft() ||
+            eitherUrlPixQRCode.isLeft()
+        ) {
+            return Left.create({
+                domain: 'Gift',
+                type: 'loadError',
+                message: getFirstError(
+                    eitherPrice,
+                    eitherUrlImage,
+                    eitherUrlPixCopyPaste,
+                    eitherUrlPixQRCode,
+                ),
+            })
+        }
+
+        return Right.create(
+            new Gift(
+                id,
+                name,
+                description,
+                eitherPrice.value,
+                userId,
+                guestId,
+                eitherUrlPixCopyPaste.value,
+                eitherUrlPixQRCode.value,
+                eitherUrlImage.value,
+                createAt,
+                updateAt,
             ),
         )
     }
