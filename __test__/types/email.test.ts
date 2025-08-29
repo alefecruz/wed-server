@@ -1,4 +1,4 @@
-import { Email } from './index'
+import { Email } from '@/types'
 
 describe('it should verify email type', () => {
     test('if dev@test.com is valid email', () => {

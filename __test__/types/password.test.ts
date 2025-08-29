@@ -1,4 +1,4 @@
-import { Password } from './index'
+import { Password } from '@/types'
 
 describe('it should verify password type', () => {
     test('valid password: Graudo@123', () => {

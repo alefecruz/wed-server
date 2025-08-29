@@ -1,4 +1,4 @@
-import { User } from './index'
+import { User } from '@/entities/user'
 
 const now = new Date()
 describe('it should verify user entity when created', () => {

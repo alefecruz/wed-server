@@ -1,5 +1,5 @@
-import { PRICE_CURRENCY, IConstPriceCurrenyKeys } from '../../const'
-import { Left, IError, Either, Right } from '../../utils'
+import { PRICE_CURRENCY, IConstPriceCurrenyKeys } from '@/const'
+import { Left, IError, Either, Right } from '@/utils'
 
 type IPriceError = IError<'Type Price', 'createType'>
 

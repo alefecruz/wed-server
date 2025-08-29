@@ -1,4 +1,4 @@
-import { Gift } from '.'
+import { Gift } from '@/entities/gift'
 
 describe('it should verify Gift entity when created', () => {
     test('if gift is valid', () => {

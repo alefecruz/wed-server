@@ -1,4 +1,4 @@
-import { Guest } from '.'
+import { Guest } from '@/entities/guest'
 
 const now = new Date()
 describe('it should verify guest entity when created', () => {

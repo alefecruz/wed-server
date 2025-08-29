@@ -1,4 +1,4 @@
-import { Price } from '.'
+import { Price } from '@/types'
 
 describe('it should verify price type', () => {
     test('it should create a price type valid', () => {

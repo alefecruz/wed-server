@@ -1,5 +1,5 @@
-import { getFirstError, IError, Left, Either, Right } from '../../utils'
-import { Price, URL } from '../../types'
+import { getFirstError, IError, Left, Either, Right } from '@/utils'
+import { Price, URL } from '@/types'
 
 type IGiftCreate = {
     name: string

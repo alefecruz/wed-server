@@ -1,4 +1,4 @@
-import { Either, IError, Left, Right } from '../../utils'
+import { Either, IError, Left, Right } from '@/utils'
 
 type IURLError = IError<'type URL', 'createError'>
 

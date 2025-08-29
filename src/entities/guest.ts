@@ -1,5 +1,5 @@
-import { Name } from '../../types'
-import { Either, IError, Left, Right } from '../../utils'
+import { Name } from '@/types'
+import { Either, IError, Left, Right } from '@/utils'
 
 type IGuestCreate = {
     userId: number

@@ -1,4 +1,4 @@
-import { Either, Left, Right, IError } from '../../utils'
+import { Either, Left, Right, IError } from '@/utils'
 
 type INameError = IError<'Type Name', 'createError'>
 

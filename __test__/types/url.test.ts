@@ -1,4 +1,4 @@
-import { URL } from '.'
+import { URL } from '@/types'
 
 describe('it should verify URL type', () => {
     test('it should create a URL type valid with http', () => {

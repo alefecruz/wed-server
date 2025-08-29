@@ -1,4 +1,4 @@
-import { Name } from './index'
+import { Name } from '@/types'
 
 describe('it should verify name type', () => {
     test('if "Raissa Marques" is a valid name', () => {
