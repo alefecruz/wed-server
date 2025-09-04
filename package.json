@@ -1,21 +1,21 @@
 {
   "name": "bne-template",
   "version": "0.0.1",
-  "description": "Templade node with express",
-  "main": "index.js",
+  "description": "Templade node with express, typescript, jest, eslint, prettier, husky, lint-staged, tsup and tsx",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
     "migrate:dev": "knex migrate:rollback --env development && knex migrate:latest --env development",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "start": "tsx src/index.ts",
-    "start:dev": "tsx --watch src/index.ts",
+    "start": "tsx src/server.ts",
+    "start:dev": "tsx --watch src/server.ts",
     "build": "tsup src",
     "prepare": "husky"
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix",
-      "jest --findRelatedTests"
+      "eslint --fix"
     ]
   },
   "repository": {
@@ -33,6 +33,8 @@
     "@eslint/js": "^9.25.1",
     "@eslint/json": "^0.12.0",
     "@eslint/markdown": "^6.4.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.14.1",
     "cz-conventional-changelog": "^3.3.0",
@@ -51,10 +53,12 @@
     "typescript-eslint": "^8.31.1"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "knex": "^3.1.0",
     "sqlite3": "^5.1.7",
+    "util": "^0.12.5",
     "yarn": "^1.22.22"
   },
   "config": {
