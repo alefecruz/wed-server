@@ -28,7 +28,10 @@ type IUserOutput = {
     updateAt: Date
 }
 
-type IUserError = IError<'User', 'createError' | 'updateError' | 'loadError'>
+export type IUserError = IError<
+    'User',
+    'createError' | 'updateError' | 'loadError'
+>
 
 export class User {
     private constructor(

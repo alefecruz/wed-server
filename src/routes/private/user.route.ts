@@ -3,8 +3,8 @@ import { userController } from '@/controllers'
 
 const userRoutes = Router()
 
-userRoutes.post('/auth', userController.auth)
+userRoutes.put('/edit/:id', userController.edit)
 
-userRoutes.post('/', userController.create)
+userRoutes.delete('/:id', userController.delete)
 
 export default userRoutes
