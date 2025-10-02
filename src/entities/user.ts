@@ -1,7 +1,7 @@
 import { Email, Name, Password } from '@/types'
 import { Either, Left, Right, IError, getFirstError } from '@/utils'
 
-type IUserCreate = {
+export type IUserCreate = {
     email: string
     husbandName: string
     wifeName: string

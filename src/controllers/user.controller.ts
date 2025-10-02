@@ -4,6 +4,7 @@ import { UserService } from '@/services'
 export type IUserCreate = {
     email: string
     password: string
+    confirmPassword: string
     husbandName: string
     wifeName: string
 }
@@ -14,27 +15,35 @@ export class userController {
         // AUTHENTICATE USER
     }
 
-    static create(req: Request, res: Response) {
-        const { email, password, husbandName, wifeName } =
-            req.body as IUserCreate
+    static async create(
+        req: Request<unknown, unknown, IUserCreate>,
+        res: Response,
+    ) {
+        const { email, password, husbandName, wifeName, confirmPassword } =
+            req.body
 
-        if (!email || !password || !husbandName || !wifeName) {
+        if (
+            !email ||
+            !password ||
+            !husbandName ||
+            !wifeName ||
+            !confirmPassword
+        ) {
             return res.status(400).send('Missing required fields')
         }
 
-        const createServiceEither = UserService.create({
+        if (password !== confirmPassword) {
+            return res.status(400).send('Passwords do not match')
+        }
+
+        const userCreateService = await UserService.create({
             email,
             password,
             husbandName,
             wifeName,
         })
 
-        if (createServiceEither.isLeft())
-            return res.status(400).send(createServiceEither.error)
-
-        const user = createServiceEither.value
-
-        return res.send(user)
+        return res.send(userCreateService)
     }
 
     static edit(req: Request, res: Response) {

@@ -1,17 +1,13 @@
-import { IUserError, User } from '@/entities'
-import { IUserCreate } from '@/controllers'
-import { Either, Left, Right } from '@/utils'
-
+import { User, IUserCreate, IUserError } from '@/entities'
 import { InMemoryUserRepository } from '@/repositories/in-memory/user.repository'
-
-type IErrorCreate = IUserError
 
 export class UserService {
     static async create(
         userRequestCreate: IUserCreate,
-    ): Either<IErrorCreate, User> {
+    ): Promise<User | IUserError> {
         const userEither = User.create(userRequestCreate)
-        if (userEither.isLeft()) return Left.create(userEither.error)
+
+        if (userEither.isLeft()) return userEither.error
 
         const user = userEither.value
 
@@ -21,8 +17,18 @@ export class UserService {
             user.serialize().email,
         )
 
-        // IF exist error
+        console.log('User exists:', userExists)
 
-        return Right.create(user)
+        if (userExists) {
+            return {
+                domain: 'User',
+                type: 'createError',
+                message: 'User already exists',
+            }
+        }
+
+        await userRepository.create(user)
+
+        return user
     }
 }
