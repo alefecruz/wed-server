@@ -1,5 +1,5 @@
 import { User, IUserCreate, IUserError } from '@/entities'
-import { InMemoryUserRepository } from '@/repositories/in-memory/user.repository'
+import { Repository } from '@/repositories/in-memory'
 
 export class UserService {
     static async create(
@@ -11,7 +11,7 @@ export class UserService {
 
         const user = userEither.value
 
-        const userRepository = new InMemoryUserRepository()
+        const { userRepository } = Repository.create()
 
         const userExists = await userRepository.getByEmail(
             user.serialize().email,
@@ -30,5 +30,13 @@ export class UserService {
         await userRepository.create(user)
 
         return user
+    }
+
+    static async list() {
+        const { userRepository } = Repository.create()
+
+        const userList = await userRepository.list()
+
+        return userList
     }
 }

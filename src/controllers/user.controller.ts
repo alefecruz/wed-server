@@ -46,6 +46,12 @@ export class userController {
         return res.send(userCreateService)
     }
 
+    static async list(req: Request, res: Response) {
+        const list = await UserService.list()
+
+        return res.status(200).json(list)
+    }
+
     static edit(req: Request, res: Response) {
         // TODO
         // EDIT USER
